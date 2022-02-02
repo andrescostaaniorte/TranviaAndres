@@ -20,6 +20,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Usuario {
 	
+	//PRUEBA DE EDICION DESDE GITHUB
+	
 	@Id @GeneratedValue
 	private long idUsuario;
 	
