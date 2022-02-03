@@ -29,6 +29,26 @@ public class UsuarioServicio {
 	public Usuario buscarPorEmail(String email) {
 		return repositorio.findFirstByEmail(email);
 	}
+
+	public static Object findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void add(Usuario nuevoUsuario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void edit(Usuario nuevoUsuario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void deleteUsuario(int id) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

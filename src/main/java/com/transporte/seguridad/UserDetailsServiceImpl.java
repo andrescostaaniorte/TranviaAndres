@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (usuario != null) {
 			builder = User.withUsername(username);
 			builder.disabled(false);
-			builder.password(usuario.getPassword());
+			builder.password((String) usuario.getPassword());
 			builder.authorities(new SimpleGrantedAuthority("ROLE_USER"));
 		} else {
 			throw new UsernameNotFoundException("Usuario no encontrado");

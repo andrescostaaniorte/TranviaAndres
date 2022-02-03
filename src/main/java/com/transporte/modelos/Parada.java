@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -15,7 +14,7 @@ public class Parada {
 	@Id @GeneratedValue
 	private long idParada;
 	
-	private String nombreParada;
+	public String nombreParada;
 	
 	
 	//QUITAMOS MODELO DE ZONA Y LO HACEMOS ATRIBUTO

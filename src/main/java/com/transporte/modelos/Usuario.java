@@ -2,14 +2,14 @@ package com.transporte.modelos;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -34,11 +34,11 @@ public class Usuario {
 	//UN USUARIO PUEDE REALIZAR UNO O MAS PAGOS
 	//DEFINIMOS CANTIDAD DISPONIBLE PORQUE ES LO QUE NOS INTERESA DE PAGO
 	@OneToMany
-	private Pago saldo;
+	List<Pago> pagos;
 	
 	//CADA USUARIO PUEDE TENER VARIOS VIAJES EN UN MISMO DIA
 	@OneToMany
-	List<ViajeGastado> viajeGastado;
+	List<ViajeGastado> viajesGastados;
 	
 	
 	private String email;
@@ -46,11 +46,11 @@ public class Usuario {
 	
 	
 	//CAMPOS DE BONO
-
-	@Id @GeneratedValue
+	@Column(unique=true)
 	private long idBono;
+	private double saldoBono;
 	
-	@OneToMany
+	@ManyToOne
 	private TipoBono tipoBono;
 
 	
@@ -61,34 +61,21 @@ public class Usuario {
 	//CONSTRUCTORES
 	public Usuario() { }
 
-	public Usuario(long idUsuario, String nombre, String apellidos, String dni, Date fechaAlta, Pago saldo,
-			List<ViajeGastado> viajeGastado, String email, String password, long idBono, TipoBono tipoBono) {
+	public Usuario(long idUsuario, String nombre, String apellidos, String dni, Date fechaAlta, List<Pago> pagos,
+			List<ViajeGastado> viajesGastados, String email, String password, long idBono, double saldoBono,
+			TipoBono tipoBono) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.dni = dni;
 		this.fechaAlta = fechaAlta;
-		this.saldo = saldo;
-		this.viajeGastado = viajeGastado;
+		this.pagos = pagos;
+		this.viajesGastados = viajesGastados;
 		this.email = email;
 		this.password = password;
 		this.idBono = idBono;
-		this.tipoBono = tipoBono;
-	}
-	
-	public Usuario(String nombre, String apellidos, String dni, Date fechaAlta, Pago saldo,
-			List<ViajeGastado> viajeGastado, String email, String password, long idBono, TipoBono tipoBono) {
-		super();
-		this.nombre = nombre;
-		this.apellidos = apellidos;
-		this.dni = dni;
-		this.fechaAlta = fechaAlta;
-		this.saldo = saldo;
-		this.viajeGastado = viajeGastado;
-		this.email = email;
-		this.password = password;
-		this.idBono = idBono;
+		this.saldoBono = saldoBono;
 		this.tipoBono = tipoBono;
 	}
 
@@ -132,20 +119,20 @@ public class Usuario {
 		this.fechaAlta = fechaAlta;
 	}
 
-	public Pago getSaldo() {
-		return saldo;
+	public List<Pago> getPagos() {
+		return pagos;
 	}
 
-	public void setSaldo(Pago saldo) {
-		this.saldo = saldo;
+	public void setPagos(List<Pago> pagos) {
+		this.pagos = pagos;
 	}
 
-	public List<ViajeGastado> getViajeGastado() {
-		return viajeGastado;
+	public List<ViajeGastado> getViajesGastados() {
+		return viajesGastados;
 	}
 
-	public void setViajeGastado(List<ViajeGastado> viajeGastado) {
-		this.viajeGastado = viajeGastado;
+	public void setViajesGastados(List<ViajeGastado> viajesGastados) {
+		this.viajesGastados = viajesGastados;
 	}
 
 	public String getEmail() {
@@ -156,20 +143,20 @@ public class Usuario {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public long getIdBono() {
 		return idBono;
 	}
 
 	public void setIdBono(long idBono) {
 		this.idBono = idBono;
+	}
+
+	public double getSaldoBono() {
+		return saldoBono;
+	}
+
+	public void setSaldoBono(double saldoBono) {
+		this.saldoBono = saldoBono;
 	}
 
 	public TipoBono getTipoBono() {
@@ -179,7 +166,7 @@ public class Usuario {
 	public void setTipoBono(TipoBono tipoBono) {
 		this.tipoBono = tipoBono;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -191,9 +178,13 @@ public class Usuario {
 		result = prime * result + (int) (idBono ^ (idBono >>> 32));
 		result = prime * result + (int) (idUsuario ^ (idUsuario >>> 32));
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + ((pagos == null) ? 0 : pagos.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((saldo == null) ? 0 : saldo.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(saldoBono);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((tipoBono == null) ? 0 : tipoBono.hashCode());
+		result = prime * result + ((viajesGastados == null) ? 0 : viajesGastados.hashCode());
 		return result;
 	}
 
@@ -250,6 +241,13 @@ public class Usuario {
 		} else if (!nombre.equals(other.nombre)) {
 			return false;
 		}
+		if (pagos == null) {
+			if (other.pagos != null) {
+				return false;
+			}
+		} else if (!pagos.equals(other.pagos)) {
+			return false;
+		}
 		if (password == null) {
 			if (other.password != null) {
 				return false;
@@ -257,11 +255,7 @@ public class Usuario {
 		} else if (!password.equals(other.password)) {
 			return false;
 		}
-		if (saldo == null) {
-			if (other.saldo != null) {
-				return false;
-			}
-		} else if (!saldo.equals(other.saldo)) {
+		if (Double.doubleToLongBits(saldoBono) != Double.doubleToLongBits(other.saldoBono)) {
 			return false;
 		}
 		if (tipoBono == null) {
@@ -271,15 +265,47 @@ public class Usuario {
 		} else if (!tipoBono.equals(other.tipoBono)) {
 			return false;
 		}
+		if (viajesGastados == null) {
+			if (other.viajesGastados != null) {
+				return false;
+			}
+		} else if (!viajesGastados.equals(other.viajesGastados)) {
+			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "Usuario [idUsuario=" + idUsuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni
-				+ ", fechaAlta=" + fechaAlta + ", saldo=" + saldo + ", viajeGastado=" + viajeGastado + ", email="
-				+ email + ", password=" + password + ", idBono=" + idBono + ", tipoBono=" + tipoBono + "]";
+				+ ", fechaAlta=" + fechaAlta + ", pagos=" + pagos + ", viajesGastados=" + viajesGastados + ", email="
+				+ email + ", password=" + password + ", idBono=" + idBono + ", saldoBono=" + saldoBono + ", tipoBono="
+				+ tipoBono + "]";
 	}
+
+	
+	//METODOS PARA LA SEGURIDAD
+	public CharSequence getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void setPassword(String encode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setAvatar(String uriString) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object getAvatar() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	
 }
