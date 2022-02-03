@@ -2,7 +2,14 @@ package com.transporte.pruebas;
 
 public class FicheroPrueba {
 	
+<<<<<<< HEAD
 	//PRUEBA DE EDICION DESDE GITHUB
 	
 	//EDITANDO UN COMENTARIO PARA CTUALIZAR GITHUB DE ANDRES
+=======
+	//AQUI SOLO VAMOS A HACER PRUEBAS PARA EDITAR DESDE GITHUB
+	
+	//EDITANTO DESDE GITHUB DE ANDRES
+	
+>>>>>>> fa73b107c6f34f8d6ffbdb611e7caba136b0e301
 }
